@@ -1,0 +1,99 @@
+1) в index.php вызывается метод Mage::run()
+2) в нем  вызывается self::$_app->run()      (Mage_Core_Model_App::run())
+3) $this->getFrontController()->dispatch();
+когда уже будет запускаться метод dispatch(), 
+
+4) вызывается метод getFrontController()
+public function getFrontController()
+    {
+        if (!$this->_frontController) {
+            $this->_initFrontController();
+        }
+        return $this->_frontController;
+    }
+
+4) вызывается метод _initFrontController()
+protected function _initFrontController()
+    {
+        $this->_frontController = new Mage_Core_Controller_Varien_Front();
+        Mage::register('controller', $this->_frontController);
+        Varien_Profiler::start('mage::app::init_front_controller');
+        $this->_frontController->init();
+        Varien_Profiler::stop('mage::app::init_front_controller');
+        return $this;
+    }
+
+5) вызывается метод init()
+
+6) в методе init() выполняется addRouter(), в результате чего имеем по умолчанию 5 роутеров
+admin = {Mage_Core_Controller_Varien_Router_Admin} 
+standard = {Mage_Core_Controller_Varien_Router_Standard} 
+install = {Mage_Install_Controller_Router_Install} 
+cms = {Mage_Cms_Controller_Router} 
+default = {Mage_Core_Controller_Varien_Router_Default} 
+
+На каждом из роутеров вызывается метод collectRoutes(), который биндит им массив роутингов в поле routes
+В итоге у каждого из роутеров есть поле routes, которое хранит массив приассайненых к нему роутингов.
+Напрмер, Mage_Core_Controller_Varien_Router_Admin сожержит поле routes, которое хранит список роутингов, определенных в своем config.xml с нодой <use>admin</use>
+
+7) вызывается метод dispatch() на классе Mage_Core_Controller_Varien_Front, упомянутый в пункте 3  ( $this->getFrontController()->dispatch(); )
+он проходит все роутеры, пока не найдет нужный
+
+ while (!$request->isDispatched() && $i++ < 100) {
+            foreach ($this->_routers as $router) {
+                /** @var $router Mage_Core_Controller_Varien_Router_Abstract */
+                if ($router->match($request)) { // *(1)
+                    break;
+                }
+            }
+        }
+в строке *(1) - если находит текущий роутер, то запускает в итоге нужный контроллер нужный action. 
+
+7.1) метод dispatch() на классе Mage_Core_Controller_Varien_Action:
+сначала вызывается preDispatch() на контроллере
+если не установлен флаг $this->setFlag('', self::FLAG_NO_DISPATCH, true) - то запускается нужный action и postDispatch.
+
+8)loadLayout () в контроллере:
+	Layout глобальный и он создается через контроллер синглтоном Mage::getSingletone('core/layout').
+8.1) сначала добавляется дефолтный хендл 
+	if (false!==$handles && ''!==$handles) {
+            $this->getLayout()->getUpdate()->addHandle($handles ? $handles : 'default');
+        }
+8.2) генерятся все нужные блоки в Mage_Core_Controller_Varien_Action
+	$this->generateLayoutBlocks()
+	=>
+	$this->getLayout()->generateBlocks();;
+8.3) уже в лейауте происходит создание блоков и выполнение экшнов
+ 	    switch ($node->getName()) {
+                case 'block':
+                    $this->_generateBlock($node, $parent);
+                    $this->generateBlocks($node);
+                    break;
+
+                case 'reference':
+                    $this->generateBlocks($node);
+                    break;
+
+                case 'action':
+                    $this->_generateAction($node, $parent);
+                    break;
+            }
+
+9) renderLayout()
+
+9.1) обработка нужных шаблонов и генерация html кода в итоге происходит в результате выполнения строки  $output = $this->getLayout()->getOutput(); 
+public function getOutput()
+    {
+        $out = '';
+        if (!empty($this->_output)) {
+            foreach ($this->_output as $callback) {
+                $out .= $this->getBlock($callback[0])->{$callback[1]}();
+            }
+        }
+
+        return $out;
+    }
+9.2) $this->getResponse()->appendBody($output); - добавляет код в ответ.
+также на респонсе можно вызывать редирект: $action->getResponse()->setRedirect($loginUrl);
+
+9.3 ) возврат в метод dispatch () из пункта 7 и продолжение с того места.

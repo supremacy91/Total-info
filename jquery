@@ -1,0 +1,9 @@
+Что бы jQuery не конфликтовал с prototype:
+jQuery(function ($){
+
+    $(".addToExistingButton").on("click", function (x) {
+        alert("XXX");
+    })
+
+});
+

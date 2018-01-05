@@ -1,0 +1,15 @@
+передача массива в методе GET
+1) file.php?name[]=value1&name[]=value2&name[]=value3
+получим: Array ( [name] => Array ( [0] => value1 [1] => value2 [2] => value3 ) )
+
+test.php?var[1]=opa&var[3]=popa	
+$_GET['var'] = array(1 => 'opa', 3=> 'popa')
+
+2) file.php?arr_date='.serialize($arr).'	
+получение
+<?
+$arr=(isset($_GET['arr_date']) && !empty($_GET['arr_date']))?$_GET['arr_date']:0;
+if ($arr) {
+   print_r(unserialize($arr));
+}
+?>

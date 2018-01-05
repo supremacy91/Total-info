@@ -1,0 +1,6 @@
+https://code.tutsplus.com/articles/magento-theme-development-an-introduction--cms-21036
+https://www.sitepoint.com/an-introduction-to-magento-themes/
+
+Если в theme.xml указан путь  <parent>...<parent/> - то если нужные лейауты и тимплейты не будут найдены в текущей теме - то будет поиск по лейаутам и темплейтам темы указанной в <parent>. Также если не будет найдено там - будет обработан таким же образом theme.xml в теме <parent>. В конечном счете будет поиск по base/default
+Если в theme.xml стоит заглушка <parent/> - то аналогично поиск удет сразу в base/default 
+Если файла theme.xml нету вообще - то будет по аналогии с первым случаям, с той разницей что в случае отсутсвия нуных файлов - не будет обработан theme.xml в теме <parent>. В конечном счете будет также поиск по base/default

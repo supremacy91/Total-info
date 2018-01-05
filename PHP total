@@ -1,0 +1,140 @@
+Отличия const defined:
+
+const FOO = 'BAR';
+define('FOO', 'BAR');
+
+const - инициализируется в овремя компиляции
+define - инициализируется на этапе выполнения
+
+    const cannot be used to conditionally define constants. To define a global constant, it has to be used in the outermost scope:
+
+    if (...) {
+        const FOO = 'BAR';    // invalid
+    }
+    // but
+    if (...) {
+        define('FOO', 'BAR'); // valid
+    }
+
+    Why would you want to do that anyways? One common application is to check whether the constant is already defined:
+
+    if (!defined('FOO')) {
+        define('FOO', 'BAR');
+    }
+
+
+в обоих случаях попытка переопределения константы выдает Notice
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+константы классов:
+
+1) Обьявляются без спецификатора и всегда публичные
+
+2) Обязательно инициализировать при обьявлении 
+
+3) Можно перекрывать в классах - наследниках, как и статические переменные
+
+4) Константы можно использовать в интерфейсах, но при этом нельзя их переопределять в имплементирующих классах
+interface dbObject
+{
+    const TABLE_NAME='undefined';
+    public static function GetAll();
+}
+
+class dbPerson implements dbObject
+{
+  //  const TABLE_NAME='persons'; - если раскомментить эту строку будет ошибка
+    public static function GetAll()
+    {
+        return "SELECT * FROM `".static::TABLE_NAME."`";
+    }
+}
+
+class dbAdmin extends dbPerson
+{
+    const TABLE_NAME='admins'; - а тут норм отработает
+
+}
+
+//echo dbObject::$x;
+$xx = new dbAdmin();
+echo dbPerson::GetAll()."<br>"
+echo dbAdmin::GetAll()."<br>"
+
+результат:
+SELECT * FROM `undefined`
+SELECT * FROM `admins`
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+htmlentities() преобразует все символы в соответствующие HTML-сущности (для тех символов, для которых HTML-сущности существуют). 
+htmlspecialchars() 
+& (амперсанд) 	&amp;
+" (двойные кавычки) 	&quot;, если не установлена ENT_NOQUOTES
+' (одинарные кавычки) 	&#039; (для ENT_HTML401) или &apos; (для ENT_XML1, ENT_XHTML или ENT_HTML5), но только если установлена ENT_QUOTES
+< (меньше) 	&lt;
+> (больше) 	&gt;
+
+ По умолчанию используется ENT_COMPAT - Преобразует двойные кавычки, одинарные кавычки не изменяются.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+array_values
+возвращает массив со всеми элементами массива array. Она также заново индексирует возвращаемый массив числовыми индексами. 
+
+function foo(){}
+foo(1, 2, 3);
+func_get_args() // [1, 2, 3]
+func_num_args() // 3
+func_get_arg(1) // 2
+
+callback - функция, переданная в функцию как переменная. 
+Пример1:
+my_callback_function() будет callback функцией
+function my_callback_function() {
+    echo 'hello world!';
+}
+call_user_func('my_callback_function');
+Пример2:
+$x = function ($a) {
+  return $a * 2;
+};
+is_callable($x) // true 
+is_callable('my_callback_function') // true 
+
+Замыкания могут также наследовать переменные из родительской области видимости. Любая подобная переменная должна быть объявлена в конструкции use. Начиная с PHP 7.1, эти переменные не должны включать superglobals, $this и переменные с теми же именами, что и параметры функции. 
+<?php
+$message = 'привет';
+$example = function () {
+    var_dump($message);   // Notice: Undefined variable: message in /example.php
+};
+$example();               // NULL
+$example = function () use ($message) {
+    var_dump($message);
+};
+$example();               // string(5) "привет"
+
+Callable — это специальный псевдотип данных в PHP, означающий «нечто, что может быть вызвано как функция».
+Callback-функции могут быть отмечены в коде подсказкой callable, появившейся в версии PHP 5.4. 
+is_callable() как раз проверяет — принадлежит ли переданное ей значение псевдотипу callable. 
+array_map — Применяет callback-функцию ко всем элементам указанных массивов
+замыкания (closures) - анонимные функции. реализуются с использованием класса Closure. 
+
+
+Переменные по умолчани нельзя инициализировать замыканиями
+function f1($d = function (){
+    echo "DDD";
+}) {} - выдаст ошибку
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+

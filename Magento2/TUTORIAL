@@ -1,0 +1,28 @@
+https://www.pierrefay.com/magento2-training.html
+
+http://alanstorm.com/magento_2_mvvm_mvc/
+https://medium.com/@dannynimmo/how-to-use-the-repository-pattern-in-magento-2-4914caa67eaa
+http://www.mage-world.com/blog/how-to-use-model-and-collection-in-magento-2.html
+
+https://www.mageplaza.com/magento-2-module-development/create-system-xml-configuration-magento-2.html   !!
+https://www.mageplaza.com/magento-2-module-development/magento-2-layout-block-template.html
+
+https://www.magestore.com/magento-2-tutorial/magento-2-how-to-enable-layered-navigation/ - layered navigation
+	
+https://magento.stackexchange.com/questions/123920/magento-2-what-are-the-interceptors-file-in-var-generation - interceptors
+
+https://webkul.com/blog/magento2-code-generation-and-factory-design-pattern/ - factories
+
+rewriting
+
+http://inchoo.net/magento-2/overriding-classes-magento-2/            - overriding + plugins
+http://mageclass.com/screencast-how-to-change-core-functionality-in-magento2/  - overriding + plugins
+https://webkul.com/blog/magento2-use-plugins/			     - plugins
+
+https://www.classyllama.com/blog/template-override-m2                - override template
+
+https://alanstorm.com/magento_2_object_manager/                      - object manager
+https://alanstorm.com/magento2_dependency_injection_2015/            - dependency injection
+https://alanstorm.com/magento_2_object_manager_preferences/          - preferences
+https://alanstorm.com/magento_2_object_manager_argument_replacement/ - argument replacement
+

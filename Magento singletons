@@ -1,0 +1,5 @@
+Mage::getSingleton('core/resource')
+В клсее Mage_Core_Model_Resourse_Setup
+
+Mage::getResourceSingleton($this->_resourceName);
+в моделе при обращении к ее ресурсу

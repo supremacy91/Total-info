@@ -1,0 +1,25 @@
+скачка
+https://www.jetbrains.com/phpstorm//
+
+установка
+Once downloaded, open a terminal window and change your working directory to the download directory, then extract the .tar.gz file with this command:
+
+tar xvf PhpStorm-2016.1.2.tar.gz
+
+A new folder called PhpStorm-145.1616.3 will be created within the current working directory. It’s better to move this PhpStorm-145.1616.3 directory to /opt.
+
+sudo mv PhpStorm-145.1616.3/ /opt/phpstorm/
+
+Create a symlink
+
+sudo ln -s /opt/phpstorm/bin/phpstorm.sh /usr/local/bin/phpstorm
+
+Now type phpstorm in the terminal to launch the application.
+
+phpstorm
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Использование PhpStorm
+Ctrl+Shift+N - показать путь класса по его имени
+
